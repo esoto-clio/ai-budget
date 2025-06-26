@@ -1,10 +1,10 @@
 class CategoriesController < ApplicationController
-  before_action :set_current_user
+  before_action :require_login
   before_action :set_category, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @categories = @current_user.categories.order(:name)
-    @categories_with_spending = @current_user.categories.with_spending(
+    @categories = current_user.categories.order(:name)
+    @categories_with_spending = current_user.categories.with_spending(
       Date.current.beginning_of_month,
       Date.current.end_of_month
     )
@@ -16,12 +16,12 @@ class CategoriesController < ApplicationController
   end
 
   def new
-    @category = @current_user.categories.build
+    @category = current_user.categories.build
     @category.color = generate_random_color
   end
 
   def create
-    @category = @current_user.categories.build(category_params)
+    @category = current_user.categories.build(category_params)
 
     if @category.save
       redirect_to @category, notice: "Category was successfully created."
@@ -48,15 +48,8 @@ class CategoriesController < ApplicationController
 
   private
 
-  def set_current_user
-    @current_user = User.first_or_create!(
-      name: "Demo User",
-      email: "demo@budget.app"
-    )
-  end
-
   def set_category
-    @category = @current_user.categories.find(params[:id])
+    @category = current_user.categories.find(params[:id])
   end
 
   def category_params

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :require_not_logged_in, only: [ :new, :create ]
-  before_action :require_login, only: [ :show, :edit, :update ]
-  before_action :require_correct_user, only: [ :show, :edit, :update ]
+  before_action :require_login, only: [ :show, :edit, :update, :profile ]
+  before_action :require_correct_user, only: [ :show, :edit, :update, :profile ]
 
   def new
     @user = User.new
@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     if @user.save
       log_in(@user)
       flash[:notice] = "Welcome to Budget Tracker, #{@user.name}! Your account has been created successfully."
-      redirect_to root_path
+      redirect_to dashboard_path
     else
       render :new, status: :unprocessable_entity
     end
@@ -23,6 +23,12 @@ class UsersController < ApplicationController
     # @user is set by require_correct_user
   end
 
+  def profile
+    # @user is set by require_correct_user
+    # This is an alias for show, but with a different route for clarity
+    render :show
+  end
+
   def edit
     # @user is set by require_correct_user
   end
@@ -30,7 +36,7 @@ class UsersController < ApplicationController
   def update
     if @user.update(user_params)
       flash[:notice] = "Your profile has been updated successfully."
-      redirect_to @user
+      redirect_to user_path(@user)
     else
       render :edit, status: :unprocessable_entity
     end

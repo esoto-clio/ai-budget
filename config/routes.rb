@@ -9,23 +9,38 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Root path
-  root "dashboard#index"
+  # Root path - handles both authenticated and non-authenticated users
+  root "home#index"
 
-  # Dashboard
-  get "dashboard", to: "dashboard#index"
+  # Authentication routes (public)
+  get    "/signup",  to: "users#new"
+  get    "/login",   to: "sessions#new"
+  post   "/login",   to: "sessions#create"
+  delete "/logout",  to: "sessions#destroy"
 
-  # Resources with proper RESTful routes
-  resources :users, except: [ :index, :destroy ]
-  resources :categories
-  resources :transactions do
-    collection do
-      get :summary
+  # User management (protected)
+  resources :users, only: [ :create, :show, :edit, :update ] do
+    member do
+      get :profile  # /users/:id/profile - cleaner profile URL
     end
   end
-  resources :budget_plans, path: "budgets"
 
-  # API routes for AJAX requests
+  # Protected budget app routes - require authentication
+  scope constraints: { format: "html" } do
+    # Dashboard (main app entry point after login)
+    get "dashboard", to: "dashboard#index"
+
+    # Budget management
+    resources :categories
+    resources :transactions do
+      collection do
+        get :summary
+      end
+    end
+    resources :budget_plans, path: "budgets"
+  end
+
+  # API routes for AJAX requests (also protected)
   namespace :api do
     namespace :v1 do
       resources :transactions, only: [ :index, :show ]

@@ -1,20 +1,20 @@
 class BudgetPlansController < ApplicationController
-  before_action :set_current_user
+  before_action :require_login
   before_action :set_budget_plan, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @budget_plans = @current_user.budget_plans.order(period_start: :desc)
-    @current_budget = @current_user.budget_plans.current.first
-    @active_budgets = @current_user.budget_plans.active.order(period_start: :desc)
+    @budget_plans = current_user.budget_plans.order(period_start: :desc)
+    @current_budget = current_user.budget_plans.current.first
+    @active_budgets = current_user.budget_plans.active.order(period_start: :desc)
   end
 
   def show
-    @transactions = @current_user.transactions.expenses
+    @transactions = current_user.transactions.expenses
                                  .where(date: @budget_plan.period_start..@budget_plan.period_end)
                                  .recent
                                  .includes(:category)
 
-    @spending_by_category = @current_user.transactions.expenses
+    @spending_by_category = current_user.transactions.expenses
                                         .joins(:category)
                                         .where(date: @budget_plan.period_start..@budget_plan.period_end)
                                         .group("categories.name", "categories.color")
@@ -23,13 +23,13 @@ class BudgetPlansController < ApplicationController
   end
 
   def new
-    @budget_plan = @current_user.budget_plans.build
+    @budget_plan = current_user.budget_plans.build
     @budget_plan.period_start = Date.current.beginning_of_month
     @budget_plan.period_end = Date.current.end_of_month
   end
 
   def create
-    @budget_plan = @current_user.budget_plans.build(budget_plan_params)
+    @budget_plan = current_user.budget_plans.build(budget_plan_params)
 
     if @budget_plan.save
       redirect_to @budget_plan, notice: "Budget plan was successfully created."
@@ -56,15 +56,8 @@ class BudgetPlansController < ApplicationController
 
   private
 
-  def set_current_user
-    @current_user = User.first_or_create!(
-      name: "Demo User",
-      email: "demo@budget.app"
-    )
-  end
-
   def set_budget_plan
-    @budget_plan = @current_user.budget_plans.find(params[:id])
+    @budget_plan = current_user.budget_plans.find(params[:id])
   end
 
   def budget_plan_params
