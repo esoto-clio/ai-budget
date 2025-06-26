@@ -1,13 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
-  describe "GET /show" do
-    it "returns http success" do
-      get "/users/show"
-      expect(response).to have_http_status(:success)
-    end
-  end
-
   describe "GET /new" do
     it "returns http success" do
       get "/users/new"
@@ -18,6 +11,13 @@ RSpec.describe "Users", type: :request do
   describe "GET /create" do
     it "returns http success" do
       get "/users/create"
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe "GET /show" do
+    it "returns http success" do
+      get "/users/show"
       expect(response).to have_http_status(:success)
     end
   end
@@ -35,5 +35,4 @@ RSpec.describe "Users", type: :request do
       expect(response).to have_http_status(:success)
     end
   end
-
 end

@@ -9,11 +9,29 @@
 #   end
 
 # Create sample user
-user = User.find_or_create_by!(email: "demo@budget.app") do |u|
-  u.name = "Demo User"
+user = User.find_or_create_by!(email: "demo@budget.app") do |user|
+  user.name = "Demo User"
+  user.password = "password123"
+  user.password_confirmation = "password123"
 end
 
-puts "Created user: #{user.name}"
+puts "✅ Created demo user:"
+puts "   Email: #{user.email}"
+puts "   Password: password123"
+puts "   Name: #{user.name}"
+puts ""
+puts "🔐 Security features enabled:"
+puts "   • Password encrypted with BCrypt"
+puts "   • Session fixation protection"
+puts "   • Brute force protection (5 attempts max)"
+puts "   • CSRF protection"
+puts "   • Secure headers"
+puts ""
+puts "🚀 You can now:"
+puts "   1. Visit http://localhost:3000"
+puts "   2. Click 'Sign In'"
+puts "   3. Use: demo@budget.app / password123"
+puts "   4. Or create your own account!"
 
 # Create categories with colors
 categories_data = [

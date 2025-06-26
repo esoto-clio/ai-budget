@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Logo and Title -->
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+        <span class="text-white text-2xl font-bold">$</span>
+      </div>
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Budget Tracker</h1>
+      <p class="text-gray-600">Take control of your finances with secure, intelligent budgeting</p>
+    </div>
+
+    <!-- Security Features -->
+    <div class="bg-white rounded-lg shadow-lg p-6 space-y-4">
+      <h2 class="text-lg font-semibold text-gray-900 text-center">🔒 Secure & Private</h2>
+      <ul class="space-y-2 text-sm text-gray-600">
+        <li class="flex items-center">
+          <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Encrypted password storage
+        </li>
+        <li class="flex items-center">
+          <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Secure session management
+        </li>
+        <li class="flex items-center">
+          <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Protection against brute force attacks
+        </li>
+        <li class="flex items-center">
+          <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          Input validation & sanitization
+        </li>
+      </ul>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="space-y-3">
+      <%= link_to "Create Account", signup_path, 
+          class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" %>
+      
+      <%= link_to "Sign In", login_path, 
+          class: "w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" %>
+    </div>
+
+    <!-- Features Preview -->
+    <div class="text-center text-sm text-gray-500 space-y-1">
+      <p>✨ Track expenses & income</p>
+      <p>📊 Budget planning & monitoring</p>
+      <p>📱 Beautiful, responsive design</p>
+    </div>
+  </div>
+</div>

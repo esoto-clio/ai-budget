@@ -1,4 +1,132 @@
-<div>
-  <h1 class="font-bold text-4xl">Users#show</h1>
-  <p>Find me in app/views/users/show.html.erb</p>
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
+            <span class="text-white text-xl font-bold"><%= @user.name.first.upcase %></span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Welcome, <%= @user.name %>!</h1>
+            <p class="text-gray-600"><%= @user.email %></p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <%= link_to "Edit Profile", edit_user_path(@user), 
+              class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          <%= link_to "Sign Out", logout_path, method: :delete, 
+              class: "px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
+              data: { confirm: "Are you sure you want to sign out?" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Status -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">🔒 Account Security</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+            <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">Password Encrypted</p>
+            <p class="text-xs text-gray-500">BCrypt protection active</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+            <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">Secure Session</p>
+            <p class="text-xs text-gray-500">Session fixation protected</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+            <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">CSRF Protected</p>
+            <p class="text-xs text-gray-500">Form tampering prevented</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+            <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">Rate Limited</p>
+            <p class="text-xs text-gray-500">Brute force protection</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">📊 Account Information</h2>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+          <span class="text-sm font-medium text-gray-500">Account Created</span>
+          <span class="text-sm text-gray-900"><%= @user.created_at.strftime("%B %d, %Y") %></span>
+        </div>
+        <div class="flex justify-between items-center py-3 border-b border-gray-200">
+          <span class="text-sm font-medium text-gray-500">Last Updated</span>
+          <span class="text-sm text-gray-900"><%= @user.updated_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+        </div>
+        <div class="flex justify-between items-center py-3">
+          <span class="text-sm font-medium text-gray-500">User ID</span>
+          <span class="text-sm text-gray-900 font-mono">#<%= @user.id %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coming Soon Section -->
+    <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">🚀 Budget Features Coming Soon!</h2>
+      <p class="text-gray-600 mb-4">Your secure account is ready. Budget tracking features will be added next:</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Transaction tracking</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Expense categories</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Budget planning</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Financial reports</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Goal tracking</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-blue-400 rounded-full"></span>
+          <span>Data visualization</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

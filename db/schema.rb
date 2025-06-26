@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_26_164256) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_26_171845) do
   create_table "budget_plans", force: :cascade do |t|
     t.string "name"
     t.decimal "amount"
@@ -49,6 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_26_164256) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
   end
 
   add_foreign_key "budget_plans", "users"
