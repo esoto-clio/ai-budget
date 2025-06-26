@@ -1,0 +1,130 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-100 flex items-center justify-center px-4">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-green-600 rounded-xl flex items-center justify-center mb-4">
+        <span class="text-white text-2xl font-bold">$</span>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900">Create Account</h1>
+      <p class="text-gray-600 mt-2">Join Budget Tracker and take control of your finances</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <%= form_with(model: @user, local: true, class: "space-y-6") do |form| %>
+        
+        <!-- Error Messages -->
+        <% if @user.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-md p-4">
+            <div class="flex">
+              <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+              </svg>
+              <div>
+                <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Name Field -->
+        <div>
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.text_field :name, 
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 #{'border-red-300' if @user.errors[:name].any?}",
+              placeholder: "Enter your full name",
+              required: true,
+              autocomplete: "name",
+              value: @user.name %>
+          <% if @user.errors[:name].any? %>
+            <p class="text-red-600 text-xs mt-1"><%= @user.errors[:name].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Email Field -->
+        <div>
+          <%= form.label :email, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.email_field :email, 
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 #{'border-red-300' if @user.errors[:email].any?}",
+              placeholder: "Enter your email address",
+              required: true,
+              autocomplete: "email",
+              value: @user.email %>
+          <% if @user.errors[:email].any? %>
+            <p class="text-red-600 text-xs mt-1"><%= @user.errors[:email].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <%= form.label :password, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.password_field :password, 
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 #{'border-red-300' if @user.errors[:password].any?}",
+              placeholder: "Create a secure password (min 6 characters)",
+              required: true,
+              autocomplete: "new-password" %>
+          <% if @user.errors[:password].any? %>
+            <p class="text-red-600 text-xs mt-1"><%= @user.errors[:password].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Password Confirmation Field -->
+        <div>
+          <%= form.label :password_confirmation, "Confirm Password", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.password_field :password_confirmation, 
+              class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 #{'border-red-300' if @user.errors[:password_confirmation].any?}",
+              placeholder: "Confirm your password",
+              required: true,
+              autocomplete: "new-password" %>
+          <% if @user.errors[:password_confirmation].any? %>
+            <p class="text-red-600 text-xs mt-1"><%= @user.errors[:password_confirmation].first %></p>
+          <% end %>
+        </div>
+
+        <!-- Security Features Info -->
+        <div class="bg-green-50 border border-green-200 rounded-md p-3">
+          <div class="flex">
+            <svg class="w-5 h-5 text-green-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <div class="text-sm">
+              <p class="text-green-700">🔐 Your account will be secured with:</p>
+              <ul class="text-green-600 text-xs mt-1 space-y-1">
+                <li>• BCrypt encrypted password storage</li>
+                <li>• Secure session management</li>
+                <li>• Email validation & verification</li>
+                <li>• CSRF protection</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <%= form.submit "Create My Account", 
+            class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors cursor-pointer" %>
+      <% end %>
+
+      <!-- Links -->
+      <div class="text-center mt-6 space-y-2">
+        <p class="text-sm text-gray-600">
+          Already have an account? 
+          <%= link_to "Sign in here", login_path, class: "text-green-600 hover:text-green-500 font-medium" %>
+        </p>
+        <p class="text-xs text-gray-500">
+          <%= link_to "← Back to Home", root_path, class: "text-gray-400 hover:text-gray-600" %>
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms -->
+    <div class="text-center text-xs text-gray-500 space-y-1">
+      <p>By creating an account, you agree to keep your financial data secure</p>
+      <p>🛡️ All data is encrypted and protected</p>
+    </div>
+  </div>
+</div>

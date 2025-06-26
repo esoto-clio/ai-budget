@@ -1,8 +1,123 @@
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
+# Additional RuboCop extensions
+plugins:
+  - rubocop-rspec
+
+# Project-specific customizations for Budget Tracker
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'storage/**/*'
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*.rb'  # Generated migrations are often long
+    - 'config/boot.rb'
+    - 'config/environment.rb'
+    - 'config/puma.rb'
+    - 'config/application.rb'
+
 # Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+
+# Allow longer lines for readability in some cases
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'spec/**/*'  # Test files can be longer for readability
+
+# Allow longer methods in controllers and helpers
+Metrics/MethodLength:
+  Max: 15
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/helpers/**/*'
+    - 'spec/**/*'
+
+# Allow longer classes for models and controllers
+Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - 'app/models/**/*'
+    - 'app/controllers/**/*'
+    - 'spec/**/*'
+
+# Allow more complex methods in controllers
+Metrics/CyclomaticComplexity:
+  Max: 8
+  Exclude:
+    - 'app/controllers/**/*'
+
+# Allow more parameters in controller actions
+Metrics/ParameterLists:
+  Max: 6
+  Exclude:
+    - 'app/controllers/**/*'
+
+# Allow more complex ABC size in controllers
+Metrics/AbcSize:
+  Max: 20
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'spec/**/*'
+
+# Rails-specific customizations
+Rails/I18nLocaleTexts:
+  Enabled: false  # We're not using I18n in this project
+
+Rails/SkipsModelValidations:
+  Enabled: false  # Sometimes we need to skip validations
+
+# Style preferences
+Style/Documentation:
+  Enabled: false  # Don't require class documentation
+
+Style/FrozenStringLiteralComment:
+  Enabled: false  # Not using frozen string literals
+
+# Allow single-line method definitions for simple methods
+Style/SingleLineMethods:
+  AllowIfMethodIsEmpty: true
+
+# Allow trailing commas in multiline arrays/hashes
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+
+# Prefer double quotes for strings
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Allow both single and double quotes in tests for flexibility
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+# Layout preferences
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: aligned
+
+# RSpec-specific rules (if using RSpec)
+RSpec/ExampleLength:
+  Max: 20
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/requests/**/*'
+    - 'spec/system/**/*'
+    - 'spec/features/**/*'
