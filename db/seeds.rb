@@ -44,7 +44,7 @@ categories_data = [
   { name: "Travel", color: "#8B5CF6" },
   { name: "Salary", color: "#10B981" },
   { name: "Freelance", color: "#059669" },
-  { name: "Investments", color: "#0D9488" }
+  { name: "Investments", color: "#0D9488" },
 ]
 
 categories = categories_data.map do |cat_data|
@@ -74,7 +74,7 @@ income_categories = categories.select { |c| %w[Salary Freelance Investments].inc
 income_transactions = [
   { description: "Monthly Salary", amount: 4500.00, category: income_categories.find { |c| c.name == "Salary" }, date: Date.current.beginning_of_month + 1.day },
   { description: "Freelance Project", amount: 800.00, category: income_categories.find { |c| c.name == "Freelance" }, date: Date.current - 5.days },
-  { description: "Stock Dividend", amount: 150.00, category: income_categories.find { |c| c.name == "Investments" }, date: Date.current - 10.days }
+  { description: "Stock Dividend", amount: 150.00, category: income_categories.find { |c| c.name == "Investments" }, date: Date.current - 10.days },
 ]
 
 income_transactions.each do |transaction_data|
@@ -99,7 +99,7 @@ expense_transactions = [
   { description: "Movie Tickets", amount: 24.00, category: expense_categories.find { |c| c.name == "Entertainment" }, date: Date.current - 7.days },
   { description: "Lunch", amount: 18.50, category: expense_categories.find { |c| c.name == "Food & Dining" }, date: Date.current - 8.days },
   { description: "Uber Ride", amount: 15.30, category: expense_categories.find { |c| c.name == "Transportation" }, date: Date.current - 9.days },
-  { description: "Pharmacy", amount: 34.67, category: expense_categories.find { |c| c.name == "Healthcare" }, date: Date.current - 10.days }
+  { description: "Pharmacy", amount: 34.67, category: expense_categories.find { |c| c.name == "Healthcare" }, date: Date.current - 10.days },
 ]
 
 expense_transactions.each do |transaction_data|

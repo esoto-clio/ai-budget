@@ -11,9 +11,9 @@ class Api::V1::CategoriesController < Api::ApplicationController
           name: category.name,
           color: category.color,
           transaction_count: category.transactions.count,
-          total_spent: category.total_spent(Date.current.beginning_of_month, Date.current.end_of_month)
+          total_spent: category.total_spent(Date.current.beginning_of_month, Date.current.end_of_month),
         }
-      end
+      end,
     }
   end
 end

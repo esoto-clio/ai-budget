@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
       {
         month: date.strftime("%b"),
         income: current_user.total_income(start_date, end_date),
-        expenses: current_user.total_expenses(start_date, end_date)
+        expenses: current_user.total_expenses(start_date, end_date),
       }
     end.reverse
   end

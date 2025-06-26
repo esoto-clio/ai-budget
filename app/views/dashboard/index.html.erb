@@ -1,199 +1,227 @@
-<!-- Page Header -->
-<div class="mb-8">
-  <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-  <p class="text-gray-600 mt-2">Welcome back! Here's an overview of your financial activity.</p>
-</div>
+<!-- Dashboard with Hotwire enhancements -->
+<div data-controller="dashboard" 
+     data-dashboard-auto-refresh-value="false" 
+     data-dashboard-refresh-interval-value="30000">
 
-<!-- Financial Overview Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <!-- Total Income -->
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Total Income</p>
-        <p class="text-2xl font-bold text-green-600">$<%= number_with_precision(@total_income, precision: 2) %></p>
-      </div>
-      <div class="bg-green-100 p-3 rounded-full">
-        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.757l.879.508L12 15.414l2.121 1.337L15 16.243V8.758l-.879-.508L12 8.586L9.879 8.25L9 8.758z"></path>
-        </svg>
-      </div>
+  <!-- Page Header with Refresh Button -->
+  <div class="mb-8 flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+      <p class="text-gray-600 mt-2">Welcome back! Here's an overview of your financial activity.</p>
     </div>
+    <button data-action="click->dashboard#refresh" 
+            class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+      <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+      </svg>
+      Refresh
+    </button>
   </div>
 
-  <!-- Total Expenses -->
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Total Expenses</p>
-        <p class="text-2xl font-bold text-red-600">$<%= number_with_precision(@total_expenses, precision: 2) %></p>
-      </div>
-      <div class="bg-red-100 p-3 rounded-full">
-        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Net Balance -->
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Net Balance</p>
-        <p class="text-2xl font-bold <%= @net_balance >= 0 ? 'text-green-600' : 'text-red-600' %>">
-          $<%= number_with_precision(@net_balance, precision: 2) %>
-        </p>
-      </div>
-      <div class="<%= @net_balance >= 0 ? 'bg-green-100' : 'bg-red-100' %> p-3 rounded-full">
-        <svg class="w-6 h-6 <%= @net_balance >= 0 ? 'text-green-600' : 'text-red-600' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-  <!-- Current Budget Progress -->
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Current Budget</h2>
-    <% if @current_budget %>
-      <div class="space-y-4">
-        <div class="flex justify-between items-center">
-          <h3 class="font-medium text-gray-900"><%= @current_budget.name %></h3>
-          <span class="text-sm text-gray-500">
-            <%= @current_budget.days_remaining %> days remaining
-          </span>
-        </div>
-        
-        <div class="space-y-2">
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Spent</span>
-            <span class="font-medium">$<%= number_with_precision(@current_budget.total_spent, precision: 2) %> of $<%= number_with_precision(@current_budget.amount, precision: 2) %></span>
+  <!-- Financial Overview Cards with Turbo Frame -->
+  <%= turbo_frame_tag "financial_stats", data: { dashboard_target: "financialStats" } do %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Total Income -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Income</p>
+            <p class="text-2xl font-bold text-green-600" data-stat="income">$<%= number_with_precision(@total_income, precision: 2) %></p>
           </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                 style="width: <%= [@current_budget.progress_percentage, 100].min %>%"></div>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600"><%= @current_budget.progress_percentage %>% used</span>
-            <span class="<%= @current_budget.remaining_budget >= 0 ? 'text-green-600' : 'text-red-600' %> font-medium">
-              $<%= number_with_precision(@current_budget.remaining_budget, precision: 2) %> remaining
-            </span>
+          <div class="bg-green-100 p-3 rounded-full">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.757l.879.508L12 15.414l2.121 1.337L15 16.243V8.758l-.879-.508L12 8.586L9.879 8.25L9 8.758z"></path>
+            </svg>
           </div>
         </div>
       </div>
-    <% else %>
-      <div class="text-center py-8">
-        <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
-        <p class="text-gray-500 mb-4">No active budget found</p>
-        <%= link_to "Create Budget", new_budget_plan_path, 
-            class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
-      </div>
-    <% end %>
-  </div>
 
-  <!-- Recent Transactions -->
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-lg font-semibold text-gray-900">Recent Transactions</h2>
-      <%= link_to "View All", transactions_path, class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+      <!-- Total Expenses -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Expenses</p>
+            <p class="text-2xl font-bold text-red-600" data-stat="expenses">$<%= number_with_precision(@total_expenses, precision: 2) %></p>
+          </div>
+          <div class="bg-red-100 p-3 rounded-full">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Net Balance -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Net Balance</p>
+            <p class="text-2xl font-bold <%= @net_balance >= 0 ? 'text-green-600' : 'text-red-600' %>" data-stat="balance">
+              $<%= number_with_precision(@net_balance, precision: 2) %>
+            </p>
+          </div>
+          <div class="<%= @net_balance >= 0 ? 'bg-green-100' : 'bg-red-100' %> p-3 rounded-full">
+            <svg class="w-6 h-6 <%= @net_balance >= 0 ? 'text-green-600' : 'text-red-600' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <% if @recent_transactions.any? %>
-      <div class="space-y-3">
-        <% @recent_transactions.each do |transaction| %>
-          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center" 
-                   style="background-color: <%= transaction.category.color %>20;">
-                <span class="text-xs font-medium" style="color: <%= transaction.category.color %>;">
-                  <%= transaction.category.name.first.upcase %>
+  <% end %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Current Budget Progress with Turbo Frame -->
+    <%= turbo_frame_tag "budget_progress", data: { dashboard_target: "budgetProgress" } do %>
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Current Budget</h2>
+        <% if @current_budget %>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-900"><%= @current_budget.name %></h3>
+              <span class="text-sm text-gray-500">
+                <%= @current_budget.days_remaining %> days remaining
+              </span>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Spent</span>
+                <span class="font-medium">$<%= number_with_precision(@current_budget.total_spent, precision: 2) %> of $<%= number_with_precision(@current_budget.amount, precision: 2) %></span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                     style="width: <%= [@current_budget.progress_percentage, 100].min %>%"></div>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600"><%= @current_budget.progress_percentage %>% used</span>
+                <span class="<%= @current_budget.remaining_budget >= 0 ? 'text-green-600' : 'text-red-600' %> font-medium">
+                  $<%= number_with_precision(@current_budget.remaining_budget, precision: 2) %> remaining
                 </span>
               </div>
-              <div>
-                <p class="font-medium text-gray-900"><%= transaction.description %></p>
-                <p class="text-sm text-gray-500"><%= transaction.category.name %> • <%= transaction.date.strftime("%b %d") %></p>
-              </div>
             </div>
-            <span class="font-semibold <%= transaction.amount_color_class %>">
-              <%= transaction.formatted_amount %>
-            </span>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <p class="text-gray-500 mb-4">No active budget found</p>
+            <%= link_to "Create Budget", new_budget_plan_path, 
+                class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
           </div>
         <% end %>
       </div>
-    <% else %>
-      <div class="text-center py-8">
-        <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-        </svg>
-        <p class="text-gray-500 mb-4">No transactions yet</p>
-        <%= link_to "Add First Transaction", new_transaction_path, 
-            class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+    <% end %>
+
+    <!-- Recent Transactions with Turbo Frame -->
+    <%= turbo_frame_tag "recent_transactions", data: { dashboard_target: "recentTransactions" } do %>
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Recent Transactions</h2>
+          <%= link_to "View All", transactions_path, class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+        </div>
+        
+        <% if @recent_transactions.any? %>
+          <div class="space-y-3" data-transactions-list>
+            <% @recent_transactions.each do |transaction| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-3">
+                  <div class="w-10 h-10 rounded-full flex items-center justify-center" 
+                       style="background-color: <%= transaction.category.color %>20;">
+                    <span class="text-xs font-medium" style="color: <%= transaction.category.color %>;">
+                      <%= transaction.category.name.first.upcase %>
+                    </span>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900"><%= transaction.description %></p>
+                    <p class="text-sm text-gray-500"><%= transaction.category.name %> • <%= transaction.date.strftime("%b %d") %></p>
+                  </div>
+                </div>
+                <span class="font-semibold <%= transaction.amount_color_class %>">
+                  <%= transaction.formatted_amount %>
+                </span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <p class="text-gray-500 mb-4">No transactions yet</p>
+            <%= link_to "Add First Transaction", new_transaction_path, 
+                class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </div>
-</div>
 
-<!-- Spending by Category -->
-<% if @expense_by_category.any? %>
+  <!-- Spending by Category -->
+  <% if @expense_by_category.any? %>
+    <div class="mt-8">
+      <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-900 mb-6">Spending by Category</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <% @expense_by_category.each do |category| %>
+            <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div class="w-4 h-4 rounded-full" style="background-color: <%= category[:color] %>;"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate"><%= category[:name] %></p>
+                <p class="text-lg font-bold text-gray-900">$<%= number_with_precision(category[:amount], precision: 2) %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Quick Actions with Modal Support -->
   <div class="mt-8">
     <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900 mb-6">Spending by Category</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <% @expense_by_category.each do |category| %>
-          <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-            <div class="w-4 h-4 rounded-full" style="background-color: <%= category[:color] %>;"></div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate"><%= category[:name] %></p>
-              <p class="text-lg font-bold text-gray-900">$<%= number_with_precision(category[:amount], precision: 2) %></p>
-            </div>
-          </div>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <%= link_to new_transaction_path, 
+            class: "flex flex-col items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors",
+            data: { turbo_frame: "modal" } do %>
+          <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          <span class="text-sm font-medium text-blue-600">Add Transaction</span>
+        <% end %>
+        
+        <%= link_to new_category_path, 
+            class: "flex flex-col items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors",
+            data: { turbo_frame: "modal" } do %>
+          <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+          <span class="text-sm font-medium text-green-600">New Category</span>
+        <% end %>
+        
+        <%= link_to new_budget_plan_path, 
+            class: "flex flex-col items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors",
+            data: { turbo_frame: "modal" } do %>
+          <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <span class="text-sm font-medium text-purple-600">Create Budget</span>
+        <% end %>
+        
+        <%= link_to transactions_path(type: 'expense'), 
+            class: "flex flex-col items-center p-4 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" do %>
+          <svg class="w-8 h-8 text-red-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+          <span class="text-sm font-medium text-red-600">View Expenses</span>
         <% end %>
       </div>
     </div>
   </div>
-<% end %>
 
-<!-- Quick Actions -->
-<div class="mt-8">
-  <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <%= link_to new_transaction_path, 
-          class: "flex flex-col items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors" do %>
-        <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        <span class="text-sm font-medium text-blue-600">Add Transaction</span>
-      <% end %>
-      
-      <%= link_to new_category_path, 
-          class: "flex flex-col items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors" do %>
-        <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-        </svg>
-        <span class="text-sm font-medium text-green-600">New Category</span>
-      <% end %>
-      
-      <%= link_to new_budget_plan_path, 
-          class: "flex flex-col items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors" do %>
-        <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-        </svg>
-        <span class="text-sm font-medium text-purple-600">Create Budget</span>
-      <% end %>
-      
-      <%= link_to transactions_path(type: 'expense'), 
-          class: "flex flex-col items-center p-4 bg-red-50 hover:bg-red-100 rounded-lg transition-colors" do %>
-        <svg class="w-8 h-8 text-red-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-        </svg>
-        <span class="text-sm font-medium text-red-600">View Expenses</span>
-      <% end %>
-    </div>
-  </div>
 </div>
+
+<!-- Modal Frame for Quick Actions -->
+<%= turbo_frame_tag "modal" %>

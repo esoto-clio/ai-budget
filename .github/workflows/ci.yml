@@ -1,13 +1,51 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
 
 jobs:
-  scan_ruby:
+  rubocop:
     runs-on: ubuntu-latest
+    name: RuboCop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.8
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --parallel
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Scan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.8
+          bundler-cache: true
+
+      - name: Run Brakeman
+        run: bundle exec brakeman --exit-on-warn --no-pager
+
+  test:
+    runs-on: ubuntu-latest
+    name: Tests
+
+    services:
+      sqlite:
+        image: keinos/sqlite3:latest
 
     steps:
       - name: Checkout code
@@ -16,40 +54,42 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: 3.3.8
           bundler-cache: true
 
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          node-version: '18'
 
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
+      - name: Create database
+        run: |
+          bundle exec rails db:create
+          bundle exec rails db:migrate
+        env:
+          RAILS_ENV: test
 
-  lint:
+      - name: Run tests
+        run: bundle exec rspec
+        env:
+          RAILS_ENV: test
+
+      - name: Upload coverage reports
+        if: success()
+        run: echo "Coverage reports would be uploaded here"
+
+  quality:
     runs-on: ubuntu-latest
+    name: Code Quality
+    needs: [rubocop, security, test]
+    if: always()
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.rubocop.result }}" == "failure" || "${{ needs.security.result }}" == "failure" || "${{ needs.test.result }}" == "failure" ]]; then
+            echo "❌ Some quality checks failed"
+            exit 1
+          else
+            echo "✅ All quality checks passed!"
+          fi
 

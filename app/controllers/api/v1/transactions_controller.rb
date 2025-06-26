@@ -17,10 +17,10 @@ class Api::V1::TransactionsController < Api::ApplicationController
           category: {
             id: transaction.category.id,
             name: transaction.category.name,
-            color: transaction.category.color
-          }
+            color: transaction.category.color,
+          },
         }
-      end
+      end,
     }
   end
 
@@ -36,8 +36,8 @@ class Api::V1::TransactionsController < Api::ApplicationController
       category: {
         id: @transaction.category.id,
         name: @transaction.category.name,
-        color: @transaction.category.color
-      }
+        color: @transaction.category.color,
+      },
     }
   rescue ActiveRecord::RecordNotFound
     handle_not_found
