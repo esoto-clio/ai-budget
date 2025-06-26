@@ -9,6 +9,28 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  # Root path
+  root "dashboard#index"
+
+  # Dashboard
+  get "dashboard", to: "dashboard#index"
+
+  # Resources with proper RESTful routes
+  resources :users, except: [ :index, :destroy ]
+  resources :categories
+  resources :transactions do
+    collection do
+      get :summary
+    end
+  end
+  resources :budget_plans, path: "budgets"
+
+  # API routes for AJAX requests
+  namespace :api do
+    namespace :v1 do
+      resources :transactions, only: [ :index, :show ]
+      resources :categories, only: [ :index ]
+      get "dashboard/stats", to: "dashboard#stats"
+    end
+  end
 end
